@@ -37,17 +37,18 @@ class SelectQuoted(sublime_plugin.TextCommand):
 			if self.view.score_selector(pos, "string.quoted") <= 0:
 				return None
 
-		# Turn on 'round' implicitly if...
-		# The start of the selection is a quote
-		if self.view.score_selector(region.a, "punctuation.definition.string") > 0:
-			around = True
-		# The end of the selection is a quote
-		if self.view.score_selector(region.b, "punctuation.definition.string") > 0:
-			around = False
-		# The selected region is abutted by quotes on either side
-		if (self.view.score_selector(region.a - 1, "punctuation.definition.string") > 0 and
-		    self.view.score_selector(region.b + 1, "punctuation.definition.string") > 0):
-			around = True
+		if region.a != region.b:
+			# Turn on 'round' implicitly if...
+			# The start of the selection is a quote
+			if self.view.score_selector(region.a, "punctuation.definition.string") > 0:
+				around = True
+			# The end of the selection is a quote
+			if self.view.score_selector(region.b, "punctuation.definition.string") > 0:
+				around = True
+			# The selected region is abutted by quotes on either side
+			if (self.view.score_selector(region.a - 1, "punctuation.definition.string") > 0 and
+			    self.view.score_selector(region.b + 1, "punctuation.definition.string") > 0):
+				around = True
 
 		# Predicates for if we should continue expanding the selection foreward/back
 		if around:
